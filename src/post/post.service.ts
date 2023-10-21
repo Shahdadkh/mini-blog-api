@@ -26,7 +26,7 @@ export class PostsService {
     const postId = await this.postsRepository.findOne({ where: { id } });
 
     if (!postId) {
-      throw new HttpException('Post is not found.', HttpStatus.NOT_FOUND);
+      throw new HttpException('post is not found.', HttpStatus.NOT_FOUND);
     }
 
     return postId;
@@ -36,7 +36,7 @@ export class PostsService {
     const postId = await this.postsRepository.findOne({ where: { id } });
 
     if (!postId) {
-      throw new HttpException('Post is not found.', HttpStatus.NOT_FOUND);
+      throw new HttpException('post is not found.', HttpStatus.NOT_FOUND);
     }
 
     return this.postsRepository.update({ id }, { ...updatePostDto });
@@ -46,7 +46,7 @@ export class PostsService {
     const postId = await this.postsRepository.findOne({ where: { id } });
 
     if (!postId) {
-      throw new HttpException('Post is not found.', HttpStatus.NOT_FOUND);
+      throw new HttpException('post is not found.', HttpStatus.NOT_FOUND);
     }
 
     return this.postsRepository.delete(id);

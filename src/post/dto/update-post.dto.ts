@@ -1,23 +1,9 @@
-import {
-  IsDateString,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UpdatePostDto {
   @IsString()
   @IsNotEmpty()
-  userId: string;
-
-  @IsString()
-  @IsNotEmpty()
   title: string;
-
-  @IsString()
-  @IsDateString()
-  @IsOptional()
-  date: string;
 
   @IsString()
   @IsNotEmpty()
@@ -25,7 +11,4 @@ export class UpdatePostDto {
 
   @IsOptional()
   verify: boolean;
-
-  @IsOptional()
-  comments: string;
 }
