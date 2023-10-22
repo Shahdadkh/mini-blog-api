@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PostsModule } from './post/post.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
     }),
     PostsModule,
+    CommentModule,
   ],
   controllers: [],
   providers: [],
