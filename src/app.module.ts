@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { PostsModule } from './post/post.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentModule } from './comment/comment.module';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -17,6 +20,9 @@ import { CommentModule } from './comment/comment.module';
     }),
     PostsModule,
     CommentModule,
+    UserModule,
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [],
   providers: [],

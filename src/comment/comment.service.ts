@@ -25,7 +25,7 @@ export class CommentService {
     const comment = await this.commentsRepository.findOne({ where: { id } });
 
     if (!comment) {
-      throw new HttpException('comment is not found.', HttpStatus.NOT_FOUND);
+      throw new HttpException('comment not found.', HttpStatus.NOT_FOUND);
     }
 
     return comment;
@@ -35,7 +35,7 @@ export class CommentService {
     const comment = await this.commentsRepository.findOne({ where: { id } });
 
     if (!comment) {
-      throw new HttpException('comment is not found.', HttpStatus.NOT_FOUND);
+      throw new HttpException('comment not found.', HttpStatus.NOT_FOUND);
     }
 
     return this.commentsRepository.update({ id }, { ...updateCommentDto });

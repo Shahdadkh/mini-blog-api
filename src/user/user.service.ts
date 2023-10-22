@@ -1,0 +1,61 @@
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import Users from './entities/user.entity';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcryptjs';
+
+@Injectable()
+export class UserService {
+  constructor(
+    @InjectRepository(Users)
+    private readonly UsersRepository: Repository<Users>,
+  ) {}
+
+  async findOne(id: number) {
+    const user = await this.UsersRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
+    }
+
+    return user;
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.UsersRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
+    }
+
+    return this.UsersRepository.update({ id }, { ...updateUserDto });
+  }
+
+  async changePassword(id: number, UpdatePasswordDto: UpdatePasswordDto) {
+    const user = await this.UsersRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
+    }
+
+    const isPasswordMatch = await bcrypt.compare(
+      UpdatePasswordDto.oldPassword,
+      user.password,
+    );
+
+    if (!isPasswordMatch) {
+      throw new HttpException('Wrong password.', HttpStatus.NOT_FOUND);
+    }
+
+    user.password = await bcrypt.hash(UpdatePasswordDto.newPassword, 10);
+    await this.UsersRepository.save(user);
+
+    return {
+      user: user.username,
+      status: 'success',
+      message: 'پسورد با موفقیت تغییر یافت.',
+    };
+  }
+}
