@@ -30,7 +30,16 @@ export class UserService {
       throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
     }
 
-    return this.UsersRepository.update({ id }, { ...updateUserDto });
+    const update = await this.UsersRepository.update(
+      { id },
+      { ...updateUserDto },
+    );
+
+    return {
+      ...update,
+      status: 'success',
+      message: 'تغییرات با موفقیت لحاظ شد.',
+    };
   }
 
   async changePassword(id: number, UpdatePasswordDto: UpdatePasswordDto) {
