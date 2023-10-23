@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import Posts from 'src/post/entities/post.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')
 export default class Users {
@@ -26,6 +27,6 @@ export default class Users {
   @Column({ nullable: true })
   instagram: string;
 
-  @Column({ nullable: true })
-  posts: string;
+  @OneToMany(() => Posts, (post) => post.user)
+  posts: Posts[];
 }

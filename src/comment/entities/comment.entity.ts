@@ -1,11 +1,22 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import Posts from 'src/post/entities/post.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
 
 @Entity('comments')
 export default class Comments {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ManyToOne(() => Posts, (post) => post.comments)
+  post: Posts;
+
   @Column({ nullable: false })
+  @RelationId((comments: Comments) => comments.post)
   postId: string;
 
   @Column({ nullable: false })

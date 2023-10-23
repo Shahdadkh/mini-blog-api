@@ -18,7 +18,11 @@ export class CommentService {
   }
 
   findAll() {
-    return this.commentsRepository.find();
+    return this.commentsRepository.find({
+      relations: {
+        post: true,
+      },
+    });
   }
 
   async findOne(id: number) {

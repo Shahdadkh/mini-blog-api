@@ -23,7 +23,13 @@ export class PostsService {
   }
 
   async findOne(id: number) {
-    const postId = await this.postsRepository.findOne({ where: { id } });
+    const postId = await this.postsRepository.findOne({
+      where: { id },
+      relations: {
+        user: true,
+        comments: true,
+      },
+    });
 
     if (!postId) {
       throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
