@@ -15,11 +15,20 @@ export class PostsService {
   create(createPostDto: CreatePostDto) {
     const post = this.postsRepository.create(createPostDto);
     this.postsRepository.save(post);
-    return post;
+    return {
+      ...post,
+      status: 'success',
+      message: 'پست با موفقیت ایجاد شد.',
+    };
   }
 
   findAll() {
-    return this.postsRepository.find();
+    return this.postsRepository.find({
+      relations: {
+        user: true,
+        comments: true,
+      },
+    });
   }
 
   async findOne(id: number) {
@@ -45,7 +54,15 @@ export class PostsService {
       throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
     }
 
-    return this.postsRepository.update({ id }, { ...updatePostDto });
+    const update = await this.postsRepository.update(
+      { id },
+      { ...updatePostDto },
+    );
+    return {
+      ...update,
+      status: 'success',
+      message: 'تغییرات با موفقیت لحاظ شد.',
+    };
   }
 
   async remove(id: number) {
@@ -55,6 +72,11 @@ export class PostsService {
       throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
     }
 
-    return this.postsRepository.delete(id);
+    const data = await this.postsRepository.delete(id);
+    return {
+      ...data,
+      status: 'success',
+      message: 'پست با موفقیت حذف شد',
+    };
   }
 }

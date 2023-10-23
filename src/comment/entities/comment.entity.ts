@@ -12,7 +12,7 @@ export default class Comments {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Posts, (post) => post.comments)
+  @ManyToOne(() => Posts, (post) => post.comments, { onDelete: 'CASCADE' })
   post: Posts;
 
   @Column({ nullable: false })

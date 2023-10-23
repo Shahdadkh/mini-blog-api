@@ -14,7 +14,7 @@ export default class Posts {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.posts)
+  @ManyToOne(() => Users, (user) => user.posts, { onDelete: 'CASCADE' })
   user: Users;
 
   @Column({ nullable: false })

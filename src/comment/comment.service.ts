@@ -42,6 +42,15 @@ export class CommentService {
       throw new HttpException('comment not found.', HttpStatus.NOT_FOUND);
     }
 
-    return this.commentsRepository.update({ id }, { ...updateCommentDto });
+    const data = await this.commentsRepository.update(
+      { id },
+      { ...updateCommentDto },
+    );
+
+    return {
+      ...data,
+      status: 'success',
+      message: 'تغییرات با موفقیت لحاظ شد.',
+    };
   }
 }
