@@ -4,14 +4,28 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import Comments from './entities/comment.entity';
 import { Repository } from 'typeorm';
+import Posts from 'src/post/entities/post.entity';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectRepository(Comments)
     private readonly commentsRepository: Repository<Comments>,
+    @InjectRepository(Posts)
+    private readonly PostsRepository: Repository<Posts>,
   ) {}
-  create(createCommentDto: CreateCommentDto) {
+
+  async create(createCommentDto: CreateCommentDto) {
+    const post = await this.PostsRepository.findOne({
+      where: {
+        id: parseInt(createCommentDto.postId),
+      },
+    });
+
+    if (!post) {
+      throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
+    }
+
     const comment = this.commentsRepository.create(createCommentDto);
     this.commentsRepository.save(comment);
     return comment;
