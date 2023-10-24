@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { RegisterAuthDto } from './dto/login.dto';
-import { LoginAuthDto } from './dto/register.dto';
+import { LoginAuthDto } from './dto/login.dto';
+//import { RegisterAuthDto } from './dto/register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import Users from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -15,28 +15,51 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(RegisterAuthDto: RegisterAuthDto) {
+  // async register(RegisterAuthDto: RegisterAuthDto) {
+  //   const checkEmail = await this.UsersRepository.findOne({
+  //     where: {
+  //       username: RegisterAuthDto.username,
+  //     },
+  //   });
+
+  //   if (checkEmail) {
+  //     throw new HttpException('username already exist.', HttpStatus.FORBIDDEN);
+  //   }
+
+  //   RegisterAuthDto.password = await bcrypt.hash(RegisterAuthDto.password, 10);
+  //   const user = this.UsersRepository.create(RegisterAuthDto);
+  //   this.UsersRepository.save(user);
+
+  //   const data = {
+  //     user: user,
+  //     status: 'success',
+  //     message: 'کاربر با موفقیت ساخته شد.',
+  //   };
+
+  //   return data;
+  // }
+
+  async install() {
     const checkEmail = await this.UsersRepository.findOne({
       where: {
-        username: RegisterAuthDto.username,
+        username: 'admin',
       },
     });
 
     if (checkEmail) {
-      throw new HttpException('username Already Exist.', HttpStatus.FORBIDDEN);
+      throw new HttpException('username already exist.', HttpStatus.FORBIDDEN);
     }
 
-    RegisterAuthDto.password = await bcrypt.hash(RegisterAuthDto.password, 10);
-    const user = this.UsersRepository.create(RegisterAuthDto);
-    this.UsersRepository.save(user);
+    const user = new Users();
+    user.username = 'admin';
+    user.password = await bcrypt.hash('admin', 10);
 
-    const data = {
-      user: user,
+    await this.UsersRepository.save(user);
+    return {
+      username: user.username,
       status: 'success',
       message: 'کاربر با موفقیت ساخته شد.',
     };
-
-    return data;
   }
 
   async login(LoginAuthDto: LoginAuthDto) {
