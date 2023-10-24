@@ -6,6 +6,8 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerMiddleware } from './auth/middleware/logger.middleware';
+import { AppService } from './app.service';
+import Users from './user/entities/user.entity';
 
 @Module({
   imports: [
@@ -24,9 +26,10 @@ import { LoggerMiddleware } from './auth/middleware/logger.middleware';
     UserModule,
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forFeature([Users]),
   ],
   controllers: [],
-  providers: [],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

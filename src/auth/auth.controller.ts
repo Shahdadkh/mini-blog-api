@@ -12,11 +12,6 @@ export class AuthController {
   //   return this.authService.register(RegisterAuthDto);
   // }
 
-  @Post('install')
-  install() {
-    return this.authService.install();
-  }
-
   @Post('login')
   login(@Body() loginAuthDto: LoginAuthDto) {
     return this.authService.login(loginAuthDto);

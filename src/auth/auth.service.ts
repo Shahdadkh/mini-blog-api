@@ -39,29 +39,6 @@ export class AuthService {
   //   return data;
   // }
 
-  async install() {
-    const checkEmail = await this.UsersRepository.findOne({
-      where: {
-        username: 'admin',
-      },
-    });
-
-    if (checkEmail) {
-      throw new HttpException('username already exist.', HttpStatus.FORBIDDEN);
-    }
-
-    const user = new Users();
-    user.username = 'admin';
-    user.password = await bcrypt.hash('admin', 10);
-
-    await this.UsersRepository.save(user);
-    return {
-      username: user.username,
-      status: 'success',
-      message: 'کاربر با موفقیت ساخته شد.',
-    };
-  }
-
   async login(LoginAuthDto: LoginAuthDto) {
     const user = await this.UsersRepository.findOne({
       where: {
