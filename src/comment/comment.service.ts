@@ -28,7 +28,11 @@ export class CommentService {
 
     const comment = this.commentsRepository.create(createCommentDto);
     this.commentsRepository.save(comment);
-    return comment;
+    return {
+      ...comment,
+      status: 'success',
+      message: 'بازخورد شما با موفقیت ارسال شد.',
+    };
   }
 
   findAll() {
