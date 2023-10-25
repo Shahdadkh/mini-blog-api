@@ -17,6 +17,7 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
+  app.enableCors();
   await app.listen(8000);
 }
 bootstrap();
