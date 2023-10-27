@@ -28,7 +28,7 @@ export default class Comments {
   @Column({ nullable: true, type: 'timestamp', default: 'now()' })
   date: Date;
 
-  @Column({ type: 'boolean', default: true })
+  @Column({ type: 'boolean', default: false })
   verify: boolean;
 
   @Column({ nullable: true })
