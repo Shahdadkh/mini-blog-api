@@ -15,11 +15,7 @@ const config = new ConfigService();
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: config.get('PG_HOST'),
-      port: config.get('PG_PORT'),
-      username: config.get('PG_USERNAME'),
-      password: config.get('PG_PASSWORD'),
-      database: config.get('PG_DATABASE'),
+      url: config.get('DATABASE_URL'),
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
