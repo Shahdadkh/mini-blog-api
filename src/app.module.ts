@@ -9,15 +9,24 @@ import { LoggerMiddleware } from './auth/middleware/logger.middleware';
 import { AppService } from './app.service';
 import Users from './user/entities/user.entity';
 
-const config = new ConfigService();
-
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: config.get('DATABASE_URL'),
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          type: 'postgres',
+          host: configService.get(`PG_HOST`),
+          port: configService.get(`PG_PORT`),
+          username: configService.get('PG_USER'),
+          password: configService.get('PG_PASS'),
+          database: configService.get('PG_DB'),
+          //url: configService.get('DATABASE_URL'),
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          synchronize: true,
+        };
+      },
     }),
     PostsModule,
     CommentModule,
