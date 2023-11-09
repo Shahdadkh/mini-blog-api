@@ -36,3 +36,4 @@ lerna-debug.log*
 
 # Ignore .env files
 .env
+.vercel
