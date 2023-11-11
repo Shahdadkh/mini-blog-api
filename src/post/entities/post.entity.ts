@@ -24,7 +24,11 @@ export default class Posts {
   @Column({ nullable: false })
   title: string;
 
-  @Column({ nullable: true, type: 'timestamp', default: 'now()' })
+  @Column({
+    nullable: true,
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   date: Date;
 
   @Column({ nullable: false })
