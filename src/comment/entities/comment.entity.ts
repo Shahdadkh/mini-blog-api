@@ -25,7 +25,11 @@ export default class Comments {
   @Column({ nullable: false })
   text: string;
 
-  @Column({ nullable: true, type: 'timestamp', default: 'now()' })
+  @Column({
+    nullable: true,
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   date: Date;
 
   @Column({ type: 'boolean', default: false })
