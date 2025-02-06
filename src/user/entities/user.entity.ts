@@ -1,5 +1,6 @@
 import Posts from 'src/post/entities/post.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export default class Users {
@@ -9,6 +10,7 @@ export default class Users {
   @Column({ nullable: false, unique: true })
   username: string;
 
+  @Exclude()
   @Column({ nullable: false })
   password: string;
 
