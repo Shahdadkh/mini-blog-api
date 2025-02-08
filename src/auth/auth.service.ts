@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginAuthDto } from './dto/login.dto';
-//import { RegisterAuthDto } from './dto/register.dto';
+import { RegisterAuthDto } from './dto/register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import Users from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -15,29 +15,29 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  // async register(RegisterAuthDto: RegisterAuthDto) {
-  //   const checkEmail = await this.UsersRepository.findOne({
-  //     where: {
-  //       username: RegisterAuthDto.username,
-  //     },
-  //   });
+  async register(RegisterAuthDto: RegisterAuthDto) {
+    const checkEmail = await this.UsersRepository.findOne({
+      where: {
+        username: RegisterAuthDto.username,
+      },
+    });
 
-  //   if (checkEmail) {
-  //     throw new HttpException('username already exist.', HttpStatus.FORBIDDEN);
-  //   }
+    if (checkEmail) {
+      throw new HttpException('username already exist.', HttpStatus.FORBIDDEN);
+    }
 
-  //   RegisterAuthDto.password = await bcrypt.hash(RegisterAuthDto.password, 10);
-  //   const user = this.UsersRepository.create(RegisterAuthDto);
-  //   this.UsersRepository.save(user);
+    RegisterAuthDto.password = await bcrypt.hash(RegisterAuthDto.password, 10);
+    const user = this.UsersRepository.create(RegisterAuthDto);
+    this.UsersRepository.save(user);
 
-  //   const data = {
-  //     user: user,
-  //     status: 'success',
-  //     message: 'کاربر با موفقیت ساخته شد.',
-  //   };
+    const data = {
+      user: user,
+      status: 'success',
+      message: 'User successfully created.',
+    };
 
-  //   return data;
-  // }
+    return data;
+  }
 
   async login(LoginAuthDto: LoginAuthDto) {
     const user = await this.UsersRepository.findOne({
