@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { PostsService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -14,6 +16,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('posts')
+@UseInterceptors(ClassSerializerInterceptor)
 export class PostsController {
   constructor(private readonly postService: PostsService) {}
 

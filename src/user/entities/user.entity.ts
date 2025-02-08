@@ -7,12 +7,18 @@ export default class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true })
+  displayName: string;
+
   @Column({ nullable: false, unique: true })
   username: string;
 
   @Exclude()
   @Column({ nullable: false })
   password: string;
+
+  @Column({ nullable: true, default: 'user' })
+  role: string;
 
   @Column({ nullable: true })
   aboutText: string;

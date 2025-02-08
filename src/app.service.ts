@@ -27,6 +27,7 @@ export class AppService implements OnModuleInit {
       const user = new Users();
       user.username = username;
       user.password = await bcrypt.hash(password, 10);
+      user.role = 'admin';
 
       await this.UsersRepository.save(user);
       return {
