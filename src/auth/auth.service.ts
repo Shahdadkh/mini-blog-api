@@ -6,6 +6,10 @@ import Users from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
+import { createAvatar } from '@dicebear/core';
+import { identicon } from '@dicebear/collection';
 
 @Injectable()
 export class AuthService {
@@ -26,8 +30,14 @@ export class AuthService {
       throw new HttpException('username already exist.', HttpStatus.FORBIDDEN);
     }
 
+    const avatar = createAvatar(identicon, { seed: RegisterAuthDto.username });
     RegisterAuthDto.password = await bcrypt.hash(RegisterAuthDto.password, 10);
-    const user = this.UsersRepository.create(RegisterAuthDto);
+    const user = this.UsersRepository.create({
+      ...RegisterAuthDto,
+      uuid: uuidv4(),
+      displayName: nanoid(8),
+      imgUrl: avatar.toString(),
+    });
     this.UsersRepository.save(user);
 
     const data = {

@@ -8,6 +8,9 @@ export default class Users {
   id: number;
 
   @Column({ nullable: true })
+  uuid: string;
+
+  @Column({ nullable: true })
   displayName: string;
 
   @Column({ nullable: false, unique: true })
@@ -21,7 +24,10 @@ export default class Users {
   role: string;
 
   @Column({ nullable: true })
-  aboutText: string;
+  imgUrl: string;
+
+  @Column({ nullable: true })
+  aboutMe: string;
 
   @Column({ nullable: true })
   facebook: string;
