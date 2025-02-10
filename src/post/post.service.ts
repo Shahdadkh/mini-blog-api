@@ -5,6 +5,7 @@ import Posts from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import Users from 'src/user/entities/user.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class PostsService {
@@ -26,7 +27,10 @@ export class PostsService {
       throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
     }
 
-    const post = this.postsRepository.create(createPostDto);
+    const post = this.postsRepository.create({
+      uuid: uuidv4(),
+      ...createPostDto,
+    });
     this.postsRepository.save(post);
     return {
       ...post,
@@ -44,9 +48,9 @@ export class PostsService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const postId = await this.postsRepository.findOne({
-      where: { id },
+      where: { uuid: id },
       relations: {
         user: true,
         comments: true,
@@ -60,15 +64,15 @@ export class PostsService {
     return postId;
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto) {
-    const postId = await this.postsRepository.findOne({ where: { id } });
+  async update(id: string, updatePostDto: UpdatePostDto) {
+    const postId = await this.postsRepository.findOne({ where: { uuid: id } });
 
     if (!postId) {
       throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
     }
 
     const update = await this.postsRepository.update(
-      { id },
+      { uuid: id },
       { ...updatePostDto },
     );
     return {
@@ -78,14 +82,14 @@ export class PostsService {
     };
   }
 
-  async remove(id: number) {
-    const postId = await this.postsRepository.findOne({ where: { id } });
+  async remove(id: string) {
+    const postId = await this.postsRepository.findOne({ where: { uuid: id } });
 
     if (!postId) {
       throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
     }
 
-    const data = await this.postsRepository.delete(id);
+    const data = await this.postsRepository.delete({ uuid: id });
     return {
       ...data,
       status: 'success',
