@@ -13,9 +13,9 @@ export class UserService {
     private readonly UsersRepository: Repository<Users>,
   ) {}
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const user = await this.UsersRepository.findOne({
-      where: { id },
+      where: { uuid: id },
       relations: {
         posts: true,
       },
@@ -28,15 +28,15 @@ export class UserService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    const user = await this.UsersRepository.findOne({ where: { id } });
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.UsersRepository.findOne({ where: { uuid: id } });
 
     if (!user) {
       throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
     }
 
     const update = await this.UsersRepository.update(
-      { id },
+      { uuid: id },
       { ...updateUserDto },
     );
 
@@ -47,8 +47,8 @@ export class UserService {
     };
   }
 
-  async changePassword(id: number, UpdatePasswordDto: UpdatePasswordDto) {
-    const user = await this.UsersRepository.findOne({ where: { id } });
+  async changePassword(id: string, UpdatePasswordDto: UpdatePasswordDto) {
+    const user = await this.UsersRepository.findOne({ where: { uuid: id } });
 
     if (!user) {
       throw new HttpException('user not found.', HttpStatus.NOT_FOUND);

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Comments from './entities/comment.entity';
 import { Repository } from 'typeorm';
 import Posts from 'src/post/entities/post.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CommentService {
@@ -18,7 +19,7 @@ export class CommentService {
   async create(createCommentDto: CreateCommentDto) {
     const post = await this.PostsRepository.findOne({
       where: {
-        id: parseInt(createCommentDto.postId),
+        uuid: createCommentDto.postUuid,
       },
     });
 
@@ -26,8 +27,13 @@ export class CommentService {
       throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
     }
 
-    const comment = this.commentsRepository.create(createCommentDto);
+    const comment = this.commentsRepository.create({
+      ...createCommentDto,
+      postId: post.id.toString(),
+      uuid: uuidv4(),
+    });
     this.commentsRepository.save(comment);
+
     return {
       ...comment,
       status: 'success',
@@ -43,8 +49,13 @@ export class CommentService {
     });
   }
 
-  async findOne(id: number) {
-    const comment = await this.commentsRepository.findOne({ where: { id } });
+  async findOne(id: string) {
+    const comment = await this.commentsRepository.findOne({
+      where: { uuid: id },
+      relations: {
+        post: true,
+      },
+    });
 
     if (!comment) {
       throw new HttpException('comment not found.', HttpStatus.NOT_FOUND);
@@ -53,15 +64,17 @@ export class CommentService {
     return comment;
   }
 
-  async update(id: number, updateCommentDto: UpdateCommentDto) {
-    const comment = await this.commentsRepository.findOne({ where: { id } });
+  async update(id: string, updateCommentDto: UpdateCommentDto) {
+    const comment = await this.commentsRepository.findOne({
+      where: { uuid: id },
+    });
 
     if (!comment) {
       throw new HttpException('comment not found.', HttpStatus.NOT_FOUND);
     }
 
     const data = await this.commentsRepository.update(
-      { id },
+      { uuid: id },
       { ...updateCommentDto },
     );
 

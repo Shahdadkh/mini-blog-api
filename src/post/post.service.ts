@@ -19,7 +19,7 @@ export class PostsService {
   async create(createPostDto: CreatePostDto) {
     const user = await this.UsersRepository.findOne({
       where: {
-        id: parseInt(createPostDto.userId),
+        uuid: createPostDto.userUuid,
       },
     });
 
@@ -29,9 +29,11 @@ export class PostsService {
 
     const post = this.postsRepository.create({
       uuid: uuidv4(),
+      userId: user.id.toString(),
       ...createPostDto,
     });
     this.postsRepository.save(post);
+
     return {
       ...post,
       status: 'success',

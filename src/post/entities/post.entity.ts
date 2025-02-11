@@ -8,18 +8,24 @@ import {
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity('posts')
 export default class Posts {
+  @Exclude()
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ nullable: true })
   uuid: string;
 
+  @Column({ nullable: true })
+  userUuid: string;
+
   @ManyToOne(() => Users, (user) => user.posts, { onDelete: 'CASCADE' })
   user: Users;
 
+  @Exclude()
   @Column({ nullable: false })
   @RelationId((posts: Posts) => posts.user)
   userId: string;
