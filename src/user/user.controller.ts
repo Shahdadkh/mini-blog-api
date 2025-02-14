@@ -7,7 +7,7 @@ import {
   Request,
   UseGuards,
   UseInterceptors,
-  ClassSerializerInterceptor
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -29,7 +29,7 @@ export class UserController {
   update(
     @Request() req,
     @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto
+    @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.userService.update(req.user, id, updateUserDto);
   }
@@ -38,7 +38,7 @@ export class UserController {
   @Patch('/password/:id')
   password(
     @Param('id') id: string,
-    @Body() updatePasswordDto: UpdatePasswordDto
+    @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
     return this.userService.changePassword(id, updatePasswordDto);
   }

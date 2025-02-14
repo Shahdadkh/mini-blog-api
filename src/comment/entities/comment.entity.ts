@@ -4,7 +4,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  RelationId
+  RelationId,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
@@ -37,7 +37,7 @@ export default class Comments {
   @Column({
     nullable: true,
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP',
   })
   date: Date;
 

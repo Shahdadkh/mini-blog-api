@@ -12,8 +12,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.use(
     session({
-      secret: config.get('JWT_SECRET')
-    })
+      secret: config.get('JWT_SECRET'),
+    }),
   );
   app.use(passport.initialize());
   app.use(passport.session());

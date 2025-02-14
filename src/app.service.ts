@@ -14,7 +14,7 @@ export class AppService implements OnModuleInit {
   constructor(
     @InjectRepository(Users)
     private readonly UsersRepository: Repository<Users>,
-    private config: ConfigService
+    private config: ConfigService,
   ) {}
 
   async onModuleInit() {
@@ -23,8 +23,8 @@ export class AppService implements OnModuleInit {
 
     const checkEmail = await this.UsersRepository.findOne({
       where: {
-        username: username
-      }
+        username: username,
+      },
     });
 
     const avatar = createAvatar(identicon, { seed: username });
@@ -41,7 +41,7 @@ export class AppService implements OnModuleInit {
       return {
         username: user.username,
         status: 'success',
-        message: 'کاربر با موفقیت ساخته شد.'
+        message: 'کاربر با موفقیت ساخته شد.',
       };
     }
   }
