@@ -30,12 +30,13 @@ export class AuthService {
       throw new HttpException('username already exist.', HttpStatus.FORBIDDEN);
     }
 
-    const avatar = createAvatar(identicon, { seed: RegisterAuthDto.username });
+    const noid = nanoid(8);
+    const avatar = createAvatar(identicon, { seed: noid });
     RegisterAuthDto.password = await bcrypt.hash(RegisterAuthDto.password, 10);
     const user = this.UsersRepository.create({
       ...RegisterAuthDto,
       uuid: uuidv4(),
-      displayName: nanoid(8),
+      displayName: noid,
       imgUrl: avatar.toString(),
     });
     this.UsersRepository.save(user);

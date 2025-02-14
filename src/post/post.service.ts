@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import Users from 'src/user/entities/user.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { UserInterface } from 'src/user/interface/user.interface';
 
 @Injectable()
 export class PostsService {
@@ -16,7 +17,8 @@ export class PostsService {
     private readonly UsersRepository: Repository<Users>,
   ) {}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(userInfo: UserInterface, createPostDto: CreatePostDto) {
+    //Find User
     const user = await this.UsersRepository.findOne({
       where: {
         uuid: createPostDto.userUuid,
@@ -27,6 +29,12 @@ export class PostsService {
       throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
     }
 
+    //Checking User
+    if (userInfo.role !== 'admin' && userInfo.sub !== user.uuid) {
+      throw new HttpException('You are not allowed.', HttpStatus.FORBIDDEN);
+    }
+
+    //Handle Data
     const post = this.postsRepository.create({
       uuid: uuidv4(),
       userId: user.id.toString(),
@@ -66,13 +74,24 @@ export class PostsService {
     return postId;
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto) {
+  async update(
+    userInfo: UserInterface,
+    id: string,
+    updatePostDto: UpdatePostDto,
+  ) {
+    //Find Post
     const postId = await this.postsRepository.findOne({ where: { uuid: id } });
 
     if (!postId) {
       throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
     }
 
+    //Checking User
+    if (userInfo.role !== 'admin' && userInfo.sub !== postId.userUuid) {
+      throw new HttpException('You are not allowed.', HttpStatus.FORBIDDEN);
+    }
+
+    //Handle Data
     const update = await this.postsRepository.update(
       { uuid: id },
       { ...updatePostDto },
@@ -84,13 +103,20 @@ export class PostsService {
     };
   }
 
-  async remove(id: string) {
+  async remove(userInfo: UserInterface, id: string) {
+    //Find Post
     const postId = await this.postsRepository.findOne({ where: { uuid: id } });
 
     if (!postId) {
       throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
     }
 
+    //Checking User
+    if (userInfo.role !== 'admin' && userInfo.sub !== postId.userUuid) {
+      throw new HttpException('You are not allowed.', HttpStatus.FORBIDDEN);
+    }
+
+    //Handle Data
     const data = await this.postsRepository.delete({ uuid: id });
     return {
       ...data,

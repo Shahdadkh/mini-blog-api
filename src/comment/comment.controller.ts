@@ -8,6 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Request,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -36,7 +37,11 @@ export class CommentController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(id, updateCommentDto);
+  update(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    return this.commentService.update(req.user, id, updateCommentDto);
   }
 }

@@ -6,6 +6,7 @@ import Comments from './entities/comment.entity';
 import { Repository } from 'typeorm';
 import Posts from 'src/post/entities/post.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { UserInterface } from 'src/user/interface/user.interface';
 
 @Injectable()
 export class CommentService {
@@ -64,7 +65,12 @@ export class CommentService {
     return comment;
   }
 
-  async update(id: string, updateCommentDto: UpdateCommentDto) {
+  async update(
+    userInfo: UserInterface,
+    id: string,
+    updateCommentDto: UpdateCommentDto,
+  ) {
+    //Find Comment
     const comment = await this.commentsRepository.findOne({
       where: { uuid: id },
     });
@@ -73,6 +79,21 @@ export class CommentService {
       throw new HttpException('comment not found.', HttpStatus.NOT_FOUND);
     }
 
+    //Find Post
+    const post = await this.PostsRepository.findOne({
+      where: { uuid: comment.postUuid },
+    });
+
+    if (!post) {
+      throw new HttpException('post not found.', HttpStatus.NOT_FOUND);
+    }
+
+    //Checking User
+    if (userInfo.role !== 'admin' && userInfo.sub !== post.userUuid) {
+      throw new HttpException('You are not allowed.', HttpStatus.FORBIDDEN);
+    }
+
+    //Handle Data
     const data = await this.commentsRepository.update(
       { uuid: id },
       { ...updateCommentDto },

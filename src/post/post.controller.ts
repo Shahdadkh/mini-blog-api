@@ -9,6 +9,7 @@ import {
   UseGuards,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Request,
 } from '@nestjs/common';
 import { PostsService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -22,8 +23,8 @@ export class PostsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  create(@Request() req, @Body() createPostDto: CreatePostDto) {
+    return this.postService.create(req.user, createPostDto);
   }
 
   @Get()
@@ -38,13 +39,17 @@ export class PostsController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(id, updatePostDto);
+  update(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    return this.postService.update(req.user, id, updatePostDto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string) {
-    return this.postService.remove(id);
+  remove(@Request() req, @Param('id') id: string) {
+    return this.postService.remove(req.user, id);
   }
 }

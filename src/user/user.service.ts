@@ -34,14 +34,19 @@ export class UserService {
     id: string,
     updateUserDto: UpdateUserDto,
   ) {
+    //Find User
     const user = await this.UsersRepository.findOne({ where: { uuid: id } });
 
     if (!user) {
       throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
     }
 
-    console.log(userInfo);
+    //Checking User
+    if (userInfo.role !== 'admin' && userInfo.sub !== user.uuid) {
+      throw new HttpException('You are not allowed.', HttpStatus.FORBIDDEN);
+    }
 
+    //Handle Data
     const update = await this.UsersRepository.update(
       { uuid: id },
       { ...updateUserDto },
@@ -54,13 +59,24 @@ export class UserService {
     };
   }
 
-  async changePassword(id: string, UpdatePasswordDto: UpdatePasswordDto) {
+  async changePassword(
+    userInfo: UserInterface,
+    id: string,
+    UpdatePasswordDto: UpdatePasswordDto,
+  ) {
+    //Find User
     const user = await this.UsersRepository.findOne({ where: { uuid: id } });
 
     if (!user) {
       throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
     }
 
+    //Checking User
+    if (userInfo.role !== 'admin' && userInfo.sub !== user.uuid) {
+      throw new HttpException('You are not allowed.', HttpStatus.FORBIDDEN);
+    }
+
+    //Handle Data
     const isPasswordMatch = await bcrypt.compare(
       UpdatePasswordDto.oldPassword,
       user.password,
