@@ -4,9 +4,10 @@ import {
   Body,
   Patch,
   Param,
+  Request,
   UseGuards,
   UseInterceptors,
-  ClassSerializerInterceptor,
+  ClassSerializerInterceptor
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -25,16 +26,20 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  update(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    return this.userService.update(req.user, id, updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('/password/:id')
   password(
     @Param('id') id: string,
-    @Body() UpdatePasswordDto: UpdatePasswordDto,
+    @Body() updatePasswordDto: UpdatePasswordDto
   ) {
-    return this.userService.changePassword(id, UpdatePasswordDto);
+    return this.userService.changePassword(id, updatePasswordDto);
   }
 }

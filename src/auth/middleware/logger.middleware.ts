@@ -21,8 +21,8 @@ export class LoggerMiddleware implements NestMiddleware {
           content_length: contentLength,
           response_time: `${responseTime.toFixed(2)}ms`,
           user_agent: userAgent,
-          ip: ip,
-        }),
+          ip: ip
+        })
       );
     });
     next();

@@ -6,7 +6,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  RelationId,
+  RelationId
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
@@ -36,7 +36,7 @@ export default class Posts {
   @Column({
     nullable: true,
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP'
   })
   date: Date;
 

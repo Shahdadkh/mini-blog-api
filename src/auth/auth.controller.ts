@@ -3,7 +3,7 @@ import {
   Post,
   Body,
   UseInterceptors,
-  ClassSerializerInterceptor,
+  ClassSerializerInterceptor
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login.dto';
@@ -15,8 +15,8 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  register(@Body() RegisterAuthDto: RegisterAuthDto) {
-    return this.authService.register(RegisterAuthDto);
+  register(@Body() registerAuthDto: RegisterAuthDto) {
+    return this.authService.register(registerAuthDto);
   }
 
   @Post('login')

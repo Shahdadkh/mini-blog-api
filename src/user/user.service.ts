@@ -5,20 +5,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Users from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+import { UserInterface } from './interface/user.interface';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(Users)
-    private readonly UsersRepository: Repository<Users>,
+    private readonly UsersRepository: Repository<Users>
   ) {}
 
   async findOne(id: string) {
     const user = await this.UsersRepository.findOne({
       where: { uuid: id },
       relations: {
-        posts: true,
-      },
+        posts: true
+      }
     });
 
     if (!user) {
@@ -28,22 +29,28 @@ export class UserService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(
+    userInfo: UserInterface,
+    id: string,
+    updateUserDto: UpdateUserDto
+  ) {
     const user = await this.UsersRepository.findOne({ where: { uuid: id } });
 
     if (!user) {
       throw new HttpException('user not found.', HttpStatus.NOT_FOUND);
     }
 
+    console.log(userInfo);
+
     const update = await this.UsersRepository.update(
       { uuid: id },
-      { ...updateUserDto },
+      { ...updateUserDto }
     );
 
     return {
       ...update,
       status: 'success',
-      message: 'تغییرات با موفقیت لحاظ شد.',
+      message: 'تغییرات با موفقیت لحاظ شد.'
     };
   }
 
@@ -56,7 +63,7 @@ export class UserService {
 
     const isPasswordMatch = await bcrypt.compare(
       UpdatePasswordDto.oldPassword,
-      user.password,
+      user.password
     );
 
     if (!isPasswordMatch) {
@@ -69,7 +76,7 @@ export class UserService {
     return {
       user: user.username,
       status: 'success',
-      message: 'پسورد با موفقیت تغییر یافت.',
+      message: 'پسورد با موفقیت تغییر یافت.'
     };
   }
 }

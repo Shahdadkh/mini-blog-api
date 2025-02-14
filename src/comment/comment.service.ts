@@ -13,14 +13,14 @@ export class CommentService {
     @InjectRepository(Comments)
     private readonly commentsRepository: Repository<Comments>,
     @InjectRepository(Posts)
-    private readonly PostsRepository: Repository<Posts>,
+    private readonly PostsRepository: Repository<Posts>
   ) {}
 
   async create(createCommentDto: CreateCommentDto) {
     const post = await this.PostsRepository.findOne({
       where: {
-        uuid: createCommentDto.postUuid,
-      },
+        uuid: createCommentDto.postUuid
+      }
     });
 
     if (!post) {
@@ -30,22 +30,22 @@ export class CommentService {
     const comment = this.commentsRepository.create({
       ...createCommentDto,
       postId: post.id.toString(),
-      uuid: uuidv4(),
+      uuid: uuidv4()
     });
     this.commentsRepository.save(comment);
 
     return {
       ...comment,
       status: 'success',
-      message: 'بازخورد شما با موفقیت ارسال شد.',
+      message: 'بازخورد شما با موفقیت ارسال شد.'
     };
   }
 
   findAll() {
     return this.commentsRepository.find({
       relations: {
-        post: true,
-      },
+        post: true
+      }
     });
   }
 
@@ -53,8 +53,8 @@ export class CommentService {
     const comment = await this.commentsRepository.findOne({
       where: { uuid: id },
       relations: {
-        post: true,
-      },
+        post: true
+      }
     });
 
     if (!comment) {
@@ -66,7 +66,7 @@ export class CommentService {
 
   async update(id: string, updateCommentDto: UpdateCommentDto) {
     const comment = await this.commentsRepository.findOne({
-      where: { uuid: id },
+      where: { uuid: id }
     });
 
     if (!comment) {
@@ -75,13 +75,13 @@ export class CommentService {
 
     const data = await this.commentsRepository.update(
       { uuid: id },
-      { ...updateCommentDto },
+      { ...updateCommentDto }
     );
 
     return {
       ...data,
       status: 'success',
-      message: 'تغییرات با موفقیت لحاظ شد.',
+      message: 'تغییرات با موفقیت لحاظ شد.'
     };
   }
 }

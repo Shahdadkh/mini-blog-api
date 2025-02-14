@@ -26,19 +26,19 @@ import Users from './user/entities/user.entity';
           url: configService.get('DATABASE_URL'),
 
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: true,
+          synchronize: true
         };
-      },
+      }
     }),
     PostsModule,
     CommentModule,
     UserModule,
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([Users])
   ],
   controllers: [],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

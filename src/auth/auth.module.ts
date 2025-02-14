@@ -13,13 +13,13 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1d' },
+        signOptions: { expiresIn: '1d' }
       }),
-      inject: [ConfigService],
+      inject: [ConfigService]
     }),
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([Users])
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy]
 })
 export class AuthModule {}

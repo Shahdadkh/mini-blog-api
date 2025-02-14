@@ -41,7 +41,8 @@ export class AuthService {
     this.UsersRepository.save(user);
 
     const data = {
-      user: user,
+      uuid: user.uuid,
+      username: user.username,
       status: 'success',
       message: 'User successfully created.',
     };

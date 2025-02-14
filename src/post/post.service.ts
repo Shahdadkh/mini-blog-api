@@ -13,14 +13,14 @@ export class PostsService {
     @InjectRepository(Posts)
     private readonly postsRepository: Repository<Posts>,
     @InjectRepository(Users)
-    private readonly UsersRepository: Repository<Users>,
+    private readonly UsersRepository: Repository<Users>
   ) {}
 
   async create(createPostDto: CreatePostDto) {
     const user = await this.UsersRepository.findOne({
       where: {
-        uuid: createPostDto.userUuid,
-      },
+        uuid: createPostDto.userUuid
+      }
     });
 
     if (!user) {
@@ -30,14 +30,14 @@ export class PostsService {
     const post = this.postsRepository.create({
       uuid: uuidv4(),
       userId: user.id.toString(),
-      ...createPostDto,
+      ...createPostDto
     });
     this.postsRepository.save(post);
 
     return {
       ...post,
       status: 'success',
-      message: 'پست با موفقیت ایجاد شد.',
+      message: 'پست با موفقیت ایجاد شد.'
     };
   }
 
@@ -45,8 +45,8 @@ export class PostsService {
     return this.postsRepository.find({
       relations: {
         user: true,
-        comments: true,
-      },
+        comments: true
+      }
     });
   }
 
@@ -55,8 +55,8 @@ export class PostsService {
       where: { uuid: id },
       relations: {
         user: true,
-        comments: true,
-      },
+        comments: true
+      }
     });
 
     if (!postId) {
@@ -75,12 +75,12 @@ export class PostsService {
 
     const update = await this.postsRepository.update(
       { uuid: id },
-      { ...updatePostDto },
+      { ...updatePostDto }
     );
     return {
       ...update,
       status: 'success',
-      message: 'تغییرات با موفقیت لحاظ شد.',
+      message: 'تغییرات با موفقیت لحاظ شد.'
     };
   }
 
@@ -95,7 +95,7 @@ export class PostsService {
     return {
       ...data,
       status: 'success',
-      message: 'پست با موفقیت حذف شد',
+      message: 'پست با موفقیت حذف شد'
     };
   }
 }
